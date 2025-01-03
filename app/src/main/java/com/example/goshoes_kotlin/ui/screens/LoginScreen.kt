@@ -158,9 +158,9 @@ fun LoginScreen(context: Context, viewModel: MainViewModel,
 
                     scope.launch {
                         viewModel.getUserInfo(email).collect { user ->
-                            if (user != null && user.password.equals(password)) {
+                            if (user != null && user.password == password) {
 
-                                viewModel.saveUsername(user.firstName)
+                                viewModel.saveUserInfo(user.firstName, user.email)
                                 Toast.makeText(context, "Successfully Log-in", Toast.LENGTH_SHORT).show()
                                 navController.navigateUp()
                             }

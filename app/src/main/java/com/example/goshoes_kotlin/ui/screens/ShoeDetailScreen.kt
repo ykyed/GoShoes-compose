@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.goshoes_kotlin.R
+import com.example.goshoes_kotlin.model.CartEntity
 import com.example.goshoes_kotlin.ui.components.RatingBar
 import com.example.goshoes_kotlin.ui.theme.Gray_bg
 import com.example.goshoes_kotlin.viewmodel.MainViewModel
@@ -211,7 +212,18 @@ fun ShoeDetailScreen(
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        coroutineScope.launch {
+                            viewModel.useremail.collect { userEmail ->
+                                viewModel.addItem(CartEntity(
+                                    email = userEmail,
+                                    productCode = productCode,
+                                    size = sizeList[selectedSize].size,
+                                    quantity = 1,
+                                ))
+                            }
+                        }
+                    },
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Black,
                         disabledContainerColor = Gray_bg),

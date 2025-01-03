@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.goshoes_kotlin.ui.screens.CartScreen
 import com.example.goshoes_kotlin.ui.screens.FilterScreen
 import com.example.goshoes_kotlin.ui.screens.LoginScreen
 import com.example.goshoes_kotlin.ui.screens.ShoeDetailScreen
@@ -76,6 +77,17 @@ fun Navigation(context: Context, viewModel: MainViewModel, navController: NavHos
                 isFABVisible = false
             )
             SignupScreen(context, viewModel, navController)
+        }
+
+        composable("cart") {
+            Log.d("Navigation", "cart")
+            viewModel.updateUIState(
+                isBackBtnVisible = true,
+                isActionBtnVisible = false,
+                isFABVisible = false
+            )
+
+            CartScreen(viewModel)
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.example.goshoes_kotlin.model.AppDataBase
+import com.example.goshoes_kotlin.model.CartEntity
 import com.example.goshoes_kotlin.model.ShoeEntity
 import com.example.goshoes_kotlin.model.SizeInfoEntity
 import com.example.goshoes_kotlin.model.UserInfoEntity
@@ -50,6 +51,7 @@ class MainViewModel(
     private val shoeDAO = AppDataBase.getDataBase(context).shoeDAO()
     private val sizeInfoDAO = AppDataBase.getDataBase(context).sizeInfoDAO()
     private val userInfoDAO = AppDataBase.getDataBase(context).userInfoDAO()
+    private val cartDAO = AppDataBase.getDataBase(context).cartInfoDAO()
 
     private val _uiState = MutableStateFlow(UIState())
     val uiState: StateFlow<UIState> = _uiState
@@ -152,19 +154,22 @@ class MainViewModel(
         return userInfoDAO.getUserInfo(email)
     }
 
-
-
     private val dataStore = context.dataStore
 
     private val USERNAME_KEY = stringPreferencesKey("username_key")
-    //private val PASSWORD_KEY = stringPreferencesKey("password_key")
+    private val USEREMAIL_KEY = stringPreferencesKey("useremail_key")
+
     val username: Flow<String> = dataStore.data
         .map { preferences -> preferences[USERNAME_KEY] ?: "" }
 
-    fun saveUsername(username: String) {
+    val useremail: Flow<String> = dataStore.data
+        .map { preferences -> preferences[USEREMAIL_KEY] ?: "" }
+
+    fun saveUserInfo(username: String, useremail: String) {
         viewModelScope.launch {
             dataStore.edit { preferences ->
                 preferences[USERNAME_KEY] = username
+                preferences[USEREMAIL_KEY] = useremail
             }
         }
     }
@@ -173,8 +178,25 @@ class MainViewModel(
         viewModelScope.launch {
             dataStore.edit { preferences ->
                 preferences.remove(USERNAME_KEY)
+                preferences.remove(USEREMAIL_KEY)
             }
         }
+    }
+
+    fun getCartItemByUser(email: String): Flow<List<CartEntity>> {
+        return cartDAO.getCartItemByUser(email)
+    }
+
+    suspend fun addItem(cart: CartEntity) {
+        cartDAO.addItem(cart)
+    }
+
+    suspend fun updateItem(cart: CartEntity) {
+        cartDAO.updateItem(cart)
+    }
+
+    suspend fun deleteItem(id: Int) {
+        cartDAO.deleteItem(id)
     }
 }
 

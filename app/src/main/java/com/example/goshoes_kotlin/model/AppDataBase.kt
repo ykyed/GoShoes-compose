@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [ShoeEntity::class, SizeInfoEntity::class, ReviewInfoEntity::class, UserInfoEntity::class],
+    entities = [ShoeEntity::class, SizeInfoEntity::class, ReviewInfoEntity::class, UserInfoEntity::class, CartEntity::class],
     version = 1
 )
 abstract class AppDataBase : RoomDatabase() {
@@ -15,6 +15,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract fun sizeInfoDAO(): SizeInfoDAO
     abstract fun reviewInfoDAO(): ReviewInfoDAO
     abstract fun userInfoDAO(): UserInfoDAO
+    abstract fun cartInfoDAO(): CartDAO
 
     // apply singleton
     companion object {
